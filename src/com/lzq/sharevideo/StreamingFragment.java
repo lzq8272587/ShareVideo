@@ -1,7 +1,5 @@
 package com.lzq.sharevideo;
 
-
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,14 +21,15 @@ public class StreamingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		
-        View v = inflater.inflate(R.layout.streaming_fragment, container, false);
-        VideoView vv = (VideoView)(v.findViewById(R.id.StreamingMediaVideoView));
-        Button start=(Button)(v.findViewById(R.id.StartStreaming));
-        
-        return v;  
-		
+
+		View v = inflater
+				.inflate(R.layout.streaming_fragment, container, false);
+		VideoView vv = (VideoView) (v
+				.findViewById(R.id.StreamingMediaVideoView));
+		Button start = (Button) (v.findViewById(R.id.FetchButton));
+
+		return v;
+
 	}
 
-	
 }

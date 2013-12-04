@@ -37,6 +37,7 @@ public class MediaProxy implements Runnable {
 				sock=servSock.accept();
 				new DataPipe(sock).startPipe();
 				Log.v(TAG, "new connection in");
+				System.out.println("new connection in");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

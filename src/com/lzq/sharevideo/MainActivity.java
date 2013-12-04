@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzq.mediaproxy.CacheProxy;
 import com.lzq.sharevideo.R;
 
 public class MainActivity extends Activity implements PeerListListener,
@@ -49,10 +50,15 @@ public class MainActivity extends Activity implements PeerListListener,
 
 	private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();;
 
+	
+	CacheProxy cacheproxy;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		cacheproxy=new CacheProxy(8080);
+		
+		
 		mViewPager = new ViewPager(this);
 		mViewPager.setId(R.id.pager);
 		setContentView(mViewPager);
@@ -66,7 +72,7 @@ public class MainActivity extends Activity implements PeerListListener,
 		mTabsAdapter.addTab(bar.newTab().setText("Direct"),
 				StreamingFragment.class, null);
 		mTabsAdapter.addTab(bar.newTab().setText("Group"),
-				StreamingFragment.class, null);
+				FetchingFragment.class, null);
 		mTabsAdapter.addTab(bar.newTab().setText("Configuration"),
 				StreamingFragment.class, null);
 
@@ -317,8 +323,10 @@ public class MainActivity extends Activity implements PeerListListener,
 		// TODO Auto-generated method stub
 		// InetAddress from WifiP2pInfo struct.
 		InetAddress groupOwnerAddress = info.groupOwnerAddress;
+		FetchingFragment.peerIP=groupOwnerAddress.getHostAddress();
 		Log.d(TAG, "call onConnectionInfoAvailable, groupOwnerAddress= "
 				+ groupOwnerAddress);
+		System.out.println("successfully connect to peers");
 		// After the group negotiation, we can determine the group owner.
 		if (info.groupFormed && info.isGroupOwner) {
 			// Do whatever tasks are specific to the group owner.
