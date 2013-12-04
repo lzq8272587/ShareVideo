@@ -35,18 +35,12 @@ import android.widget.Toast;
 import com.lzq.mediaproxy.CacheProxy;
 import com.lzq.sharevideo.R;
 
-public class MainActivity extends Activity implements PeerListListener,
-		ConnectionInfoListener {
+public class MainActivity extends Activity  {
 
 	final static String TAG = "MainActivity";
 	ViewPager mViewPager;
 	TabsAdapter mTabsAdapter;
-	private boolean isWifiP2pEnabled = false;
-	private final IntentFilter intentFilter = new IntentFilter();
 
-	Channel mChannel;
-	private WifiP2pManager manager;
-	WiFiDirectBroadcastReceiver receiver;
 
 	private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();;
 
@@ -56,6 +50,8 @@ public class MainActivity extends Activity implements PeerListListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		
+		//start CacheProxy at port 8080
 		cacheproxy=new CacheProxy(8080);
 		
 		
@@ -88,48 +84,28 @@ public class MainActivity extends Activity implements PeerListListener,
 		}
 
 		
-		System.out.println("Begin my wifi p2p test.");
-		// Indicates a change in the Wi-Fi P2P status.
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-
-		// Indicates a change in the list of available peers.
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-
-		// Indicates the state of Wi-Fi P2P connectivity has changed.
-		intentFilter
-				.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-
-		// Indicates this device's details have changed.
-		intentFilter
-				.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-		manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-		mChannel = manager.initialize(this, getMainLooper(), null);
-		Log.i(TAG,"regist receiver");
-		receiver = new WiFiDirectBroadcastReceiver(manager, mChannel, this);
-		registerReceiver(receiver, intentFilter);
+		//System.out.println("Begin my wifi p2p test.");
+//		// Indicates a change in the Wi-Fi P2P status.
+//		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+//
+//		// Indicates a change in the list of available peers.
+//		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+//
+//		// Indicates the state of Wi-Fi P2P connectivity has changed.
+//		intentFilter
+//				.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+//
+//		// Indicates this device's details have changed.
+//		intentFilter
+//				.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+//
+//		manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+//		mChannel = manager.initialize(this, getMainLooper(), null);
+//		Log.i(TAG,"regist receiver");
+//		receiver = new WiFiDirectBroadcastReceiver(manager, mChannel, this);
+//		registerReceiver(receiver, intentFilter);
 		
-		/**
-		 * discover other devices
-		 */
-		Log.i(TAG, "discoverPeers");
-		manager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 
-			@Override
-			public void onSuccess() {
-				Log.i(TAG, "discoverPeers  success");
-				Toast.makeText(MainActivity.this, "Discovery Initiated",
-						Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void onFailure(int reasonCode) {
-				Log.i(TAG, "discoverPeers  fail");
-				Toast.makeText(MainActivity.this,
-						"Discovery Failed : " + reasonCode, Toast.LENGTH_SHORT)
-						.show();
-			}
-		});
 
 		/**
 		 * connect to another device
@@ -249,94 +225,81 @@ public class MainActivity extends Activity implements PeerListListener,
 		}
 	}
 
-	/** register the BroadcastReceiver with the intent values to be matched */
-	@Override
-	public void onResume() {
-		super.onResume();
-		Log.i(TAG,"regist receiver");
-		receiver = new WiFiDirectBroadcastReceiver(manager, mChannel, this);
-		registerReceiver(receiver, intentFilter);
-	}
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		unregisterReceiver(receiver);
-	}
 
-	public boolean isWifiP2pEnabled() {
-		return isWifiP2pEnabled;
-	}
+//	@Override
+//	public void onPause() {
+//		super.onPause();
+//		unregisterReceiver(receiver);
+//	}
 
-	public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
-		this.isWifiP2pEnabled = isWifiP2pEnabled;
-	}
+
 
 	/**
 	 * For interface PeerListListener Fetch the List of Peers
 	 */
-	@Override
-	public void onPeersAvailable(WifiP2pDeviceList peerList) {
-		// TODO Auto-generated method stub
+//	@Override
+//	public void onPeersAvailable(WifiP2pDeviceList peerList) {
+//		// TODO Auto-generated method stub
+//
+//		Log.e(TAG, "onPeersAvailable:" + peerList.toString());
+//		// Out with the old, in with the new.
+//		peers.clear();
+//		peers.addAll(peerList.getDeviceList());
+//
+//		
+//		WifiP2pDevice device = peers.get(0);
+//
+//		WifiP2pConfig config = new WifiP2pConfig();
+//		config.deviceAddress = device.deviceAddress;
+//		config.wps.setup = WpsInfo.PBC;
+//		Log.i(TAG, "try to connect to " + device.toString());
+//		manager.connect(mChannel, config, new ActionListener() {
+//
+//			@Override
+//			public void onSuccess() {
+//				// WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+//				Log.i(TAG, "connect successfully");
+//			}
+//
+//			@Override
+//			public void onFailure(int reason) {
+//				Log.i(TAG, "connect failed");
+//				Toast.makeText(MainActivity.this, "Connect failed. Retry.",
+//						Toast.LENGTH_SHORT).show();
+//			}
+//		});
+//		
+//		
+//		// If an AdapterView is backed by this data, notify it
+//		// of the change. For instance, if you have a ListView of available
+//		// peers, trigger an update.
+//		// ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+//		if (peers.size() == 0) {
+//			Log.d(TAG, "No devices found");
+//			return;
+//		}
+//	}
 
-		Log.e(TAG, "onPeersAvailable:" + peerList.toString());
-		// Out with the old, in with the new.
-		peers.clear();
-		peers.addAll(peerList.getDeviceList());
-
-		
-		WifiP2pDevice device = peers.get(0);
-
-		WifiP2pConfig config = new WifiP2pConfig();
-		config.deviceAddress = device.deviceAddress;
-		config.wps.setup = WpsInfo.PBC;
-		Log.i(TAG, "try to connect to " + device.toString());
-		manager.connect(mChannel, config, new ActionListener() {
-
-			@Override
-			public void onSuccess() {
-				// WiFiDirectBroadcastReceiver will notify us. Ignore for now.
-				Log.i(TAG, "connect successfully");
-			}
-
-			@Override
-			public void onFailure(int reason) {
-				Log.i(TAG, "connect failed");
-				Toast.makeText(MainActivity.this, "Connect failed. Retry.",
-						Toast.LENGTH_SHORT).show();
-			}
-		});
-		
-		
-		// If an AdapterView is backed by this data, notify it
-		// of the change. For instance, if you have a ListView of available
-		// peers, trigger an update.
-		// ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-		if (peers.size() == 0) {
-			Log.d(TAG, "No devices found");
-			return;
-		}
-	}
-
-	@Override
-	public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-		// TODO Auto-generated method stub
-		// InetAddress from WifiP2pInfo struct.
-		InetAddress groupOwnerAddress = info.groupOwnerAddress;
-		FetchingFragment.peerIP=groupOwnerAddress.getHostAddress();
-		Log.d(TAG, "call onConnectionInfoAvailable, groupOwnerAddress= "
-				+ groupOwnerAddress);
-		System.out.println("successfully connect to peers");
-		// After the group negotiation, we can determine the group owner.
-		if (info.groupFormed && info.isGroupOwner) {
-			// Do whatever tasks are specific to the group owner.
-			// One common case is creating a server thread and accepting
-			// incoming connections.
-		} else if (info.groupFormed) {
-			// The other device acts as the client. In this case,
-			// you'll want to create a client thread that connects to the group
-			// owner.
-		}
-	}
+//	@Override
+//	public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+//		// TODO Auto-generated method stub
+//		// InetAddress from WifiP2pInfo struct.
+//		InetAddress groupOwnerAddress = info.groupOwnerAddress;
+//		FetchingFragment.peerIP=groupOwnerAddress.getHostAddress();
+//		Log.d(TAG, "call onConnectionInfoAvailable, groupOwnerAddress= "
+//				+ groupOwnerAddress);
+//		System.out.println("successfully connect to peers");
+//		// After the group negotiation, we can determine the group owner.
+//		if (info.groupFormed && info.isGroupOwner) {
+//			// Do whatever tasks are specific to the group owner.
+//			// One common case is creating a server thread and accepting
+//			// incoming connections.
+//		} else if (info.groupFormed) {
+//			// The other device acts as the client. In this case,
+//			// you'll want to create a client thread that connects to the group
+//			// owner.
+//		}
+//	}
 
 }

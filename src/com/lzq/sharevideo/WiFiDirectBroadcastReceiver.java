@@ -18,20 +18,21 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	String TAG="WiFiDirectBroadcastReceiver";
 	
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-			MainActivity activity) {
+			FetchingFragment fetcher) {
 		super();
 		this.manager = manager;
 		this.channel = channel;
-		this.activity = activity;
+		this.fetcher = fetcher;
 	}
 
 
+    
 
 
 
 	private WifiP2pManager manager;
     private Channel channel;
-    private MainActivity activity;
+    private FetchingFragment fetcher;
     
 
 	
@@ -47,9 +48,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
         	Log.d(TAG, "WIFI_P2P_STATE_CHANGED_ACTION");
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                activity.setIsWifiP2pEnabled(true);
+                fetcher.setIsWifiP2pEnabled(true);
             } else {
-                activity.setIsWifiP2pEnabled(false);
+                fetcher.setIsWifiP2pEnabled(false);
             }
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
@@ -60,7 +61,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
             if (manager != null) {
-                manager.requestPeers(channel, (PeerListListener)activity);
+                manager.requestPeers(channel, (PeerListListener)fetcher);
             }
             Log.d(TAG, "WIFI_P2P_PEERS_CHANGED_ACTION");
             
@@ -83,7 +84,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 // We are connected with the other device, request connection
                 // info to find group owner IP
 
-                manager.requestConnectionInfo(channel, activity);
+                manager.requestConnectionInfo(channel, fetcher);
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
