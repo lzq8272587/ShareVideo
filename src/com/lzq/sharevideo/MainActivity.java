@@ -11,6 +11,7 @@ import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -32,7 +33,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzq.configuration.GlobalParameters;
 import com.lzq.mediaproxy.CacheProxy;
+import com.lzq.mediaproxy.MediaProxy;
+import com.lzq.mediaproxy.MenuProxy;
 import com.lzq.sharevideo.R;
 
 public class MainActivity extends Activity  {
@@ -46,13 +50,17 @@ public class MainActivity extends Activity  {
 
 	
 	CacheProxy cacheproxy;
+	MediaProxy mediaproxy;
+	MenuProxy menuproxy;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		
-		//start CacheProxy at port 8080
-		cacheproxy=new CacheProxy(8080);
+ 
+		setTitleColor(Color.WHITE);
+		//start MediaProxy and CacheProxy 
+		cacheproxy=new CacheProxy(GlobalParameters.CacheProxyPort);
+		mediaproxy=new MediaProxy(GlobalParameters.MediaProxyPort);
+		menuproxy=new MenuProxy(GlobalParameters.MenuProxyPort);
 		
 		
 		mViewPager = new ViewPager(this);
@@ -62,10 +70,11 @@ public class MainActivity extends Activity  {
 		final ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+		bar.setDisplayShowTitleEnabled(true);
 
 		// this.setTheme(resid);
 		mTabsAdapter = new TabsAdapter(this, mViewPager);
-		mTabsAdapter.addTab(bar.newTab().setText("Direct"),
+		mTabsAdapter.addTab(bar.newTab().setText("Streaming"),
 				StreamingFragment.class, null);
 		mTabsAdapter.addTab(bar.newTab().setText("Group"),
 				FetchingFragment.class, null);
@@ -123,7 +132,7 @@ public class MainActivity extends Activity  {
 		 * "group owner".
 		 * 
 		 */
-		Log.e(TAG,"try to find other peers... waiting... ");
+		//Log.e(TAG,"try to find other peers... waiting... ");
 
 
 	}

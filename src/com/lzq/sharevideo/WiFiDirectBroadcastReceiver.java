@@ -11,6 +11,12 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.util.Log;
 
+
+/**
+ * recieve the broadcast info in System
+ * @author LZQ
+ *
+ */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 	

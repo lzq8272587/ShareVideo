@@ -4,23 +4,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <VideoView
-        android:id="@+id/FetchingMediaVideoView"
+    <ListView
+        android:id="@+id/PeerListView"
         android:layout_width="match_parent"
-        android:layout_height="388dp" />
+        android:layout_height="wrap_content">
+
+    </ListView>
 
     <Button
         android:id="@+id/DiscoverButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.33"
         android:text="Discover Nearby Peers" />
     
+    
+    
+        <ListView
+        android:id="@+id/VideoListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+    
+        
+        
         <Button
         android:id="@+id/FetchButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.33"
         android:text="Fetch it!" />
 
 </LinearLayout>

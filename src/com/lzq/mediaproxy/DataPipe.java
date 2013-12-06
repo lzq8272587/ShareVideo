@@ -5,7 +5,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import com.lzq.configuration.GlobalParameters;
-
+/**
+ * Pipe the flows between VideoView to Proxy, and Proxy to Server
+ * @author LZQ
+ *
+ */
 public class DataPipe {
 
 	Socket AppToProxy=null;
@@ -21,6 +25,7 @@ public class DataPipe {
 	public void startPipe()
 	{
 		try {
+			System.out.println("Connect to Server: "+GlobalParameters.MediaServerIP+":"+GlobalParameters.MediaServerPort);
 			ProxyToServ=new Socket(GlobalParameters.MediaServerIP,GlobalParameters.MediaServerPort);
 			pipeThdUp=new PipeThread(AppToProxy.getInputStream(), ProxyToServ.getOutputStream());
 			pipeThdDown=new PipeThread(ProxyToServ.getInputStream(), AppToProxy.getOutputStream());

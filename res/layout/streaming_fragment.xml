@@ -4,15 +4,35 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <VideoView
-        android:id="@+id/StreamingMediaVideoView"
+    <TextView
+        android:id="@+id/TextViewMediaAddress"
         android:layout_width="match_parent"
-        android:layout_height="324dp"
-        android:layout_weight="0.48" />
+        android:layout_height="wrap_content"
+        android:text="Please Enter Your Media Address"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/TextViewHttp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/MediaPathEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPostalAddress"
+        android:text="http://192.168.2.104/test.mp4" >
+
+        <requestFocus />
+    </EditText>
 
     <Button
-        android:id="@+id/StartStreaming"
-        android:layout_width="fill_parent"
+        android:id="@+id/StartStreamingButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Start Streaming" />
 

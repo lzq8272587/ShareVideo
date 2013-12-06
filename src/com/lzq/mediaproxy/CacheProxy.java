@@ -5,8 +5,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * This CacheProxy is used for share buffered video stream for other devices
+ * @author LZQ
+ */
 public class CacheProxy implements Runnable {
 
+	
 	final String TAG="CacheProxy";
 	
 	Thread CacheThread=null;
@@ -33,6 +38,7 @@ public class CacheProxy implements Runnable {
 		CacheThread = new Thread(this);
 		CacheThread.start();
 
+		System.out.println("Cache Proxy Listening on Port : "+servPort);
 	}
 	
 	
@@ -46,7 +52,7 @@ public class CacheProxy implements Runnable {
 			{
 				sock=servSocket.accept();
 				new Thread(new VideoPipe(sock)).start();
-				System.out.println("new connection in");
+				System.out.println("Cache Proxy : new connection in");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
