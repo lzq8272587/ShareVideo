@@ -43,18 +43,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.AdapterView.OnItemClickListener;
 
-
-
 /**
- * Discover devices nearby
- * and
- * Share video to other devices.
+ * Discover devices nearby and Share video to other devices.
+ * 
  * @author LZQ
- *
+ * 
  */
 public class FetchingFragment extends Fragment implements PeerListListener,
 		ConnectionInfoListener {
@@ -81,10 +79,10 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 	private AlertDialog alertdialog = null;
 
 	private ListView peerListView = null;
-	private ListView videoListView=null;
+	private ListView videoListView = null;
 
-	
-	private Handler handler=null;
+	private Handler handler = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -112,48 +110,53 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 		receiver = new WiFiDirectBroadcastReceiver(manager, mChannel, this);
 		getActivity().registerReceiver(receiver, intentFilter);
 
-		
-		handler=new Handler();
+		handler = new Handler();
 		/**
-		 * This thread is used for refreash the video list infomation from other devices
+		 * This thread is used for refreash the video list infomation from other
+		 * devices
 		 */
-		new Thread()
-		{
-			public void run()
-			{
+		new Thread() {
+			public void run() {
 				try {
-					while(true)
-					{
-					sleep(1000);
-					if(GlobalParameters.remoteConfig!=null)
-					{
-						handler.post(new Runnable(){
+					while (true) {
+						sleep(1000);
+						if (GlobalParameters.remoteConfig != null) {
+							handler.post(new Runnable() {
 
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								ArrayList<HashMap<String, String>> videoListArray = new ArrayList();
-								
-								Set<String> keyName=GlobalParameters.remoteConfig.keySet();
-								for (Object name : keyName) {
-									HashMap<String, String> map = new HashMap<String, String>();
-									map.put("peerName", (String)name);
-									map.put("peerInfo",GlobalParameters.remoteConfig.get(name));
-									videoListArray.add(map);
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									ArrayList<HashMap<String, String>> videoListArray = new ArrayList();
+
+									Set<String> keyName = GlobalParameters.remoteConfig
+											.keySet();
+									for (Object name : keyName) {
+										HashMap<String, String> map = new HashMap<String, String>();
+										map.put("peerName", (String) name);
+										map.put("peerInfo",
+												GlobalParameters.remoteConfig
+														.get(name));
+										videoListArray.add(map);
+									}
+
+									SimpleAdapter adapter = new SimpleAdapter(
+											getActivity(), videoListArray,
+											R.layout.peerlist_item,
+											new String[] { "peerName",
+													"peerInfo" }, new int[] {
+													R.id.PeerNameTextView,
+													R.id.PeerInfoTextView });
+									videoListView
+											.setBackgroundColor(Color.BLACK);
+
+									videoListView.setAdapter(adapter);
+									videoListView
+											.setBackgroundColor(Color.WHITE);
+									videoListView.setOnItemClickListener(new VideoItemOnClickListener());
 								}
 
-								SimpleAdapter adapter = new SimpleAdapter(getActivity(), videoListArray,
-										R.layout.peerlist_item,
-										new String[] { "peerName", "peerInfo" }, new int[] {
-												R.id.PeerNameTextView, R.id.PeerInfoTextView });
-								videoListView.setBackgroundColor(Color.BLACK);
-
-								videoListView.setAdapter(adapter);
-								videoListView.setBackgroundColor(Color.WHITE);
-							}
-							
-						});
-					}
+							});
+						}
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -177,14 +180,15 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 
 		peerListView = (ListView) (v.findViewById(R.id.PeerListView));
 
-		videoListView=(ListView)(v.findViewById(R.id.VideoListView));
-		
+		videoListView = (ListView) (v.findViewById(R.id.VideoListView));
+
 		fetch.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				String videopath = "http://" + peerIP + ":"+GlobalParameters.CacheProxyPort+"/test.mp4";
+				String videopath = "http://" + peerIP + ":"
+						+ GlobalParameters.CacheProxyPort + "/129.mp4";
 				Log.v(TAG, videopath);
 				Intent intent = new Intent();
 				intent.putExtra("videoPath", videopath);
@@ -293,7 +297,6 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 		}
 	}
 
-	
 	/**
 	 * Called after connection established
 	 */
@@ -306,15 +309,20 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 				+ info.groupOwnerAddress.getHostAddress());
 		InetAddress groupOwnerAddress = info.groupOwnerAddress;
 		peerIP = groupOwnerAddress.getHostAddress();
+
+		/**
+		 * when connect to other devices, send local cache info to other peers
+		 */
 		try {
-			new Thread()
-			{
-				public void run()
-				{
+			new Thread() {
+				public void run() {
 					Socket sock;
 					try {
-						sock = new Socket(peerIP,GlobalParameters.MenuProxyPort);
-						ObjectOutputStream oos=new ObjectOutputStream(sock.getOutputStream());
+						sock = new Socket(peerIP, 
+								GlobalParameters.MenuProxyPort);
+						ObjectOutputStream oos = new ObjectOutputStream(
+								sock.getOutputStream());
+						Log.v(TAG,"Send video info to others.  (Thread in onConnectAvailable)");
 						oos.writeObject(GlobalParameters.getConfigInfo());
 						oos.flush();
 						oos.close();
@@ -402,10 +410,9 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 		});
 	}
 
-	
-	
 	/**
 	 * connect to other devices
+	 * 
 	 * @param config
 	 */
 	private void connect(WifiP2pConfig config) {
@@ -427,9 +434,9 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 				Toast.makeText(getActivity(),
 						"Connect successed. Fetch video.", Toast.LENGTH_SHORT)
 						.show();
-				
-				//tell peers your video list
-				
+
+				// tell peers your video list
+
 			}
 
 			@Override
@@ -444,11 +451,11 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 		});
 	}
 
-	
 	/**
 	 * Called when try to connect a certain device after discovering
+	 * 
 	 * @author LZQ
-	 *
+	 * 
 	 */
 	class GroupItemOnClickListener implements OnItemClickListener {
 
@@ -469,7 +476,8 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 					"Please wait for connecting completed.");
 
 			alertdialog = new AlertDialog.Builder(getActivity())
-					.setTitle("Discover Results").setMessage("Peer: "+device.deviceName)
+					.setTitle("Discover Results")
+					.setMessage("Peer: " + device.deviceName)
 					.setPositiveButton("Connect",
 							new DialogInterface.OnClickListener() {
 
@@ -480,6 +488,28 @@ public class FetchingFragment extends Fragment implements PeerListListener,
 									connect(config);
 								}
 							}).setNegativeButton("Cancel", null).show();
+
+		}
+
+	}
+
+	class VideoItemOnClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+			// TODO Auto-generated method stub
+			TextView tv = (TextView) (v.findViewById(R.id.PeerNameTextView));
+
+			Log.v(TAG, tv.getText().toString());
+			String videoName = tv.getText().toString();
+			
+			String videopath = "http://" + peerIP + ":"
+					+ GlobalParameters.CacheProxyPort + "/" + videoName;
+			Log.v(TAG, videopath);
+			Intent intent = new Intent();
+			intent.putExtra("videoPath", videopath);
+			intent.setClass(getActivity(), MediaActivity.class);
+			startActivity(intent);
 
 		}
 

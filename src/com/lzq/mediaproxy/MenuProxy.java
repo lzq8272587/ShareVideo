@@ -29,9 +29,10 @@ public class MenuProxy extends CacheProxy {
 			servSocket = new ServerSocket(servPort);
 			while (running) {
 				sock = servSocket.accept();
-				ObjectInputStream ois = new ObjectInputStream(
+				ObjectInputStream ois = new ObjectInputStream( 
 						sock.getInputStream());
 				try {
+					System.out.println("Read remoteConfig from MenuProxy.");
 					HashMap<String,String> videoList=(HashMap<String,String>)ois.readObject();
 					GlobalParameters.remoteConfig=videoList;
 				} catch (ClassNotFoundException e) {
