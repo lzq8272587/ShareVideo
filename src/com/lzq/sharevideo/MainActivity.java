@@ -56,6 +56,7 @@ public class MainActivity extends Activity  {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
  
+		GlobalParameters.remoteConfig=null;
 		setTitleColor(Color.WHITE);
 		//start MediaProxy and CacheProxy 
 		cacheproxy=new CacheProxy(GlobalParameters.CacheProxyPort);
@@ -78,8 +79,8 @@ public class MainActivity extends Activity  {
 				StreamingFragment.class, null);
 		mTabsAdapter.addTab(bar.newTab().setText("Group"),
 				FetchingFragment.class, null);
-		mTabsAdapter.addTab(bar.newTab().setText("Configuration"),
-				StreamingFragment.class, null);
+//		mTabsAdapter.addTab(bar.newTab().setText("Configuration"),
+//				StreamingFragment.class, null);
 
 		// mTabsAdapter.addTab(bar.newTab().setText("Simple"),
 		// CountingFragment.class, null);

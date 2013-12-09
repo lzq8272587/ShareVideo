@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Set;
+
+import com.lzq.configuration.GlobalParameters;
 
 import android.util.Log;
 
@@ -13,7 +16,7 @@ public class VideoPipe implements Runnable{
 
 	
 	final String TAG="VideoPipe";
-	String videoPath="/sdcard/test.mp4";
+	String videoPath="/sdcard/129.mp4";
 	Socket socket=null;
 	
 	File video=null;
@@ -30,15 +33,32 @@ public class VideoPipe implements Runnable{
 		// TODO Auto-generated method stub
 		byte[] buff=new byte[1024];
 		int count=0;
-		video=new File(videoPath);
+
 		try {
-			fis=new FileInputStream(video);
+
 			os=socket.getOutputStream();
 			
 			//read http connection
 			socket.getInputStream().read(buff);
-			Log.v(TAG,new String(buff));
+			String httpHead=new String(buff);
+			Log.v(TAG,httpHead);
 			System.out.println(new String(buff));
+	
+			Set<String> keyName=GlobalParameters.getConfigInfo().keySet();
+			for(String s:keyName)
+			{
+				if(httpHead.contains(s)&&s.length()>0)
+				{
+					videoPath=GlobalParameters.getConfigInfo().get(s);
+				}
+			}
+			
+			
+			
+			video=new File(videoPath);
+			fis=new FileInputStream(video);
+			
+			
 			while((count=fis.read(buff))!=-1)
 			{
 				os.write(buff, 0, count);

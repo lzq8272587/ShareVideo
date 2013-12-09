@@ -33,7 +33,7 @@ public class CacheProxy implements Runnable {
 		this.servPort = servPort;
 
 		
-		File video=new File("/sdcard/test.mp4");
+		File video=new File("/sdcard/129.mp4");
 		System.out.println(video.getName()+" "+video.exists());
 		CacheThread = new Thread(this);
 		CacheThread.start();

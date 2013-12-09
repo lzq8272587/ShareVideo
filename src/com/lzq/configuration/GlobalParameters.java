@@ -117,7 +117,7 @@ public class GlobalParameters {
 		Set<String> keySet = ConfigInfo.keySet();
 		for (Object key : keySet) {
 			try {
-				bw.append((String)key + "," + ConfigInfo.get(key));
+				bw.append((String)key + "," + ConfigInfo.get(key)+"\n");
 				System.out.println("append to Config: " + (String) key + ","
 						+ ConfigInfo.get(key));
 				bw.flush();

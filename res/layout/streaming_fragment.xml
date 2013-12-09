@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPostalAddress"
-        android:text="http://192.168.2.104/test.mp4" >
+        android:text="http://192.168.2.100/129.mp4" >
 
         <requestFocus />
     </EditText>
